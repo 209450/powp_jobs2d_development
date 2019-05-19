@@ -5,6 +5,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,7 +16,7 @@ import edu.kis.powp.appbase.gui.WindowComponent;
 import edu.kis.powp.jobs2d.command.manager.DriverCommandManager;
 import edu.kis.powp.observer.Subscriber;
 
-public class CommandManagerWindow extends JFrame implements WindowComponent {
+public class CommandManagerWindow extends JFrame implements WindowComponent, Observer {
 
 	private DriverCommandManager commandManager;
 
@@ -109,4 +111,9 @@ public class CommandManagerWindow extends JFrame implements WindowComponent {
 		}
 	}
 
+	@Override public void update(Observable o, Object arg) {
+		System.out.println("eeee");
+		commandManager.getChangePublisher().addSubscriber(()->arg.toString());
+		updateObserverListField();
+	}
 }
