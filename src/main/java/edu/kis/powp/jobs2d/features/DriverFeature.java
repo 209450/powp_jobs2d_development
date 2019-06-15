@@ -2,13 +2,8 @@ package edu.kis.powp.jobs2d.features;
 
 import edu.kis.powp.appbase.Application;
 import edu.kis.powp.jobs2d.Job2dDriver;
-import edu.kis.powp.jobs2d.drivers.DriverDecoratorApplicator;
-import edu.kis.powp.jobs2d.drivers.DriverManager;
-import edu.kis.powp.jobs2d.drivers.SelectDriverDecoratorMenuOptionListener;
-import edu.kis.powp.jobs2d.drivers.SelectDriverMenuOptionListener;
+import edu.kis.powp.jobs2d.drivers.*;
 import edu.kis.powp.observer.Subscriber;
-
-import java.util.ArrayList;
 
 public class DriverFeature {
 
@@ -17,7 +12,7 @@ public class DriverFeature {
 	private static Subscriber decoratorSubscriber = () -> checkDecorator();
     private static Subscriber driverSubscriber = () -> 	updateDriverInfo();
 
-	private static ArrayList<DriverDecoratorApplicator> listOfDecorators = new ArrayList<>();
+	private static DriverDecoratorApplicator driverDecoratorApplicator = new DriverDecoratorApplicator();
 
     public static DriverManager getDriverManager() {
 		return driverManager;
@@ -51,9 +46,9 @@ public class DriverFeature {
 		app.addComponentMenuElement(DriverFeature.class, name, listener);
 	}
 
-	public static void addDriverDecorator(String name, Class decorator){
-		DriverDecoratorApplicator driverDecoratorApplicator = new DriverDecoratorApplicator(decorator, false);
-		listOfDecorators.add(driverDecoratorApplicator);
+	public static void addDriverDecorator(String name, DriverDecorator decorator){
+        driverDecoratorApplicator.addDecoratorWithStateToDecorate(decorator, false);
+
 		SelectDriverDecoratorMenuOptionListener listener = new SelectDriverDecoratorMenuOptionListener(driverManager,
 				driverDecoratorApplicator);
 		app.addComponentMenuElement(DriverDecoratorApplicator.class, name, listener);
@@ -69,10 +64,6 @@ public class DriverFeature {
 	public static void checkDecorator(){
 		Job2dDriver currentDriver = driverManager.getCurrentDriver();
 
-		for (DriverDecoratorApplicator driverDecoratorApplicator :
-				listOfDecorators) {
-			currentDriver = driverDecoratorApplicator.applicateDecoration(currentDriver);
-		}
-
+        driverDecoratorApplicator.applicateDecoration(currentDriver);
 	}
 }

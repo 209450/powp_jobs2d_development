@@ -73,7 +73,7 @@ public class TestJobs2dApp {
 		//Job2dDriver driver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
 		Job2dDriver driver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
 		DriverFeature.addDriver("Line Simulator", driver);
-		DriverFeature.addDriverDecorator("Use Control", LineDriverAdapterUseControl.class);
+		DriverFeature.addDriverDecorator("Use Control", new LineDriverAdapterUseControl());
 		DriverFeature.getDriverManager().setCurrentDriver(driver);
 
 		driver = new LineDriverAdapter(drawerController, LineFactory.getSpecialLine(), "special");

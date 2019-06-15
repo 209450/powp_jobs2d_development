@@ -3,25 +3,27 @@ package edu.kis.powp.jobs2d.drivers;
 import edu.kis.powp.jobs2d.Job2dDriver;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class DriverDecoratorApplicator {
 
-    private Class decoratorClass;
-    private boolean stateToDecorate;
-    private Job2dDriver beforeDecoration;
+    private ArrayList<DecoratorWithStateToDecorate> listOfDecorators = new ArrayList<>();
 
-    public DriverDecoratorApplicator(Class decoratorClass, boolean stateToDecorate) {
-        this.decoratorClass = decoratorClass;
-        this.stateToDecorate = stateToDecorate;
+    public DriverDecoratorApplicator() {
+    }
+
+    public void addDecoratorWithStateToDecorate(DriverDecorator driverDecorator, Boolean stateToDecorate){
+        listOfDecorators.add(new DecoratorWithStateToDecorate(driverDecorator,stateToDecorate));
+
     }
 
     public Class getDecoratorClass() {
         return decoratorClass;
     }
 
-    public void changeStateToDecorate(){
-        stateToDecorate = !stateToDecorate;
+    public void changeStateToDecorate(DriverDecorator driverDecorator){
+        listOfDecorators.stream().filter((i)->i.driverDecorator.equals(driverDecorator)).findAny();
     }
 
     public boolean isStateToDecorate() {
@@ -29,8 +31,11 @@ public class DriverDecoratorApplicator {
     }
 
     public Job2dDriver applicateDecoration(Job2dDriver job2dDriver){
-        if(stateToDecorate) return decorate(job2dDriver);
-        else return undoDecorate(job2dDriver);
+       listOfDecorators.forEach(decorator->{
+           if(decorator.stateToDecorate) decorator.driverDecorator.decorateDriver(job2dDriver);
+       });
+
+       return  job2dDriver;
     }
 
     private Job2dDriver decorate(Job2dDriver job2dDriver){
@@ -50,4 +55,13 @@ public class DriverDecoratorApplicator {
         else return job2dDriver;
     }
 
+    private class DecoratorWithStateToDecorate{
+        DriverDecorator driverDecorator;
+        boolean stateToDecorate;
+
+        DecoratorWithStateToDecorate(DriverDecorator driverDecorator, boolean stateToDecorate) {
+            this.driverDecorator = driverDecorator;
+            this.stateToDecorate = stateToDecorate;
+        }
+    }
 }

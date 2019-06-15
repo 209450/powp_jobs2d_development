@@ -7,6 +7,7 @@ public class SelectDriverDecoratorMenuOptionListener  implements ActionListener 
 
     private DriverManager driverManager;
     private DriverDecoratorApplicator driverDecoratorApplicator;
+    private DriverDecorator decorator;
 
     public SelectDriverDecoratorMenuOptionListener(DriverManager driverManager, DriverDecoratorApplicator driverDecoratorApplicator) {
         this.driverManager = driverManager;
